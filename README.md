@@ -13,6 +13,10 @@
 
     pip install -r requirements.txt
 
-4.  Run it
+4.  Configure the .env
+
+    make a new .env file that base on the example
+
+5.  Run it
 
     python app.py
