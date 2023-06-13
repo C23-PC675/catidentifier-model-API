@@ -1,7 +1,6 @@
 # Virtual environment
-modelenv/
-modelenv*/
 
+venv/*
 # Visual Studio Code
 .vscode/
 

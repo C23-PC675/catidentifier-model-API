@@ -5,6 +5,20 @@ import functionController
 import os, json
 
 load_dotenv()
+
+def file_exists(file_path):
+    return os.path.exists(file_path)
+
+# Example usage
+file_path = "models/model.h5"
+if not file_exists(file_path):
+    import gdown
+    destination = "models/model.h5"
+    url = f"https://drive.google.com/uc?id=1nc_0DXH7FlLt-YITYmEdAMiaZ6QobMJD"
+    gdown.download(url, destination, quiet=False)
+
+
+exit()
 app = Flask(__name__)
 
 # Load the H5 model
