@@ -17,8 +17,6 @@ if not file_exists(file_path):
     url = f"https://drive.google.com/uc?id=1nc_0DXH7FlLt-YITYmEdAMiaZ6QobMJD"
     gdown.download(url, destination, quiet=False)
 
-
-exit()
 app = Flask(__name__)
 
 # Load the H5 model
