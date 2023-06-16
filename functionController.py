@@ -128,9 +128,8 @@ def getCat(getAll=True, label=""):
                 "catCare": row[3],
                 "catImage": row[4],
                 # Add more columns as needed
-            }s
+            }
         )
-
     # Close the cursor and database connection
     cursor.close()
     db.close()
