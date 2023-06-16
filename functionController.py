@@ -1,25 +1,55 @@
-# Fungsi untuk menyimpan gambar dari request, return image path
-def saveImage(request):
-    import os
-    from dotenv import load_dotenv
+import os
+from dotenv import load_dotenv
+from google.oauth2 import service_account
+from google.cloud import storage
 
-    load_dotenv()
-    image_file = request.files["image"]
-    image_path = os.path.join(os.getenv("UPLOAD_FOLDER"), image_file.filename)
-    image_file.save(image_path)
-    return image_path
+load_dotenv()
+url = os.getenv("storage_url")
+credentials_info = {
+    "type": "service_account",
+    "project_id": os.getenv("project_id"),
+    "private_key_id": os.getenv("private_key_id"),
+    "private_key": os.getenv("private_key").replace("\\n", "\n"),
+    "client_email": os.getenv("client_email"),
+    "client_id": os.getenv("client_id"),
+    "auth_uri": os.getenv("auth_uri"),
+    "token_uri": os.getenv("token_uri"),
+    "auth_provider_x509_cert_url": os.getenv("auth_provider_x509_cert_url"),
+    "client_x509_cert_url": os.getenv("client_x509_cert_url"),
+}
+credentials_obj = service_account.Credentials.from_service_account_info(
+    credentials_info
+)
+
+client = storage.Client(credentials=credentials_obj)
+bucket = client.get_bucket(os.getenv("bucket_name"))
+
+# Fungsi untuk menyimpan gambar dari request, return image path
+
+
+def uploadImage(request):
+    file = request.files["image"]
+
+    blob = bucket.blob(file.filename)
+
+    blob.content_type = "image/jpeg"
+
+    blob.upload_from_string(file.read(), content_type=file.content_type)
+
+    return file.filename
 
 
 def predict(model, image_path):
-    from tensorflow import keras
     import cv2  # import library
     import numpy as np
-    import json, os
+    from urllib.request import urlopen
 
     image_size = (224, 224)  # Semua input di convert ke size ini
 
     # Load Image
-    img = cv2.imread(image_path)  # load image
+    response = urlopen(url + image_path)
+    image_array = np.asarray(bytearray(response.read()), dtype=np.uint8)
+    img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)  # load image
     img = cv2.resize(img, image_size)  # resize
     img = (
         img.astype("float32") / 255.0
@@ -48,7 +78,10 @@ def predict(model, image_path):
     predicted_class_label = class_labels[predicted_class_index]
     highest_confidence = predictions[0][predicted_class_index] * 100
 
-    os.remove(image_path)
+    blob = bucket.blob(image_path)
+
+    # Delete the image
+    blob.delete()
 
     data = {}
     data["label"] = predicted_class_label

@@ -6,13 +6,16 @@ import os, json
 
 load_dotenv()
 
+
 def file_exists(file_path):
     return os.path.exists(file_path)
+
 
 # Example usage
 file_path = "models/model.h5"
 if not file_exists(file_path):
     import gdown
+
     destination = "models/model.h5"
     url = f"https://drive.google.com/uc?id=1nc_0DXH7FlLt-YITYmEdAMiaZ6QobMJD"
     gdown.download(url, destination, quiet=False)
@@ -43,7 +46,7 @@ def upload():
         return "Invalid image file format", 400
 
     # Save Image and get image path
-    image_path = functionController.saveImage(request)
+    image_path = functionController.uploadImage(request)
 
     # Get cat Labels with machine learning models
     datajson = functionController.predict(model, image_path)
@@ -63,4 +66,4 @@ def cats():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=5000)
