@@ -1,23 +1,8 @@
-## Installation
+## About This API
 
-1.  Clone the repository:
+This API using Flask and integrated with Google Cloud Storage, Google Cloud SQL, and also deployed in Google Cloud Run.
 
-    git clone https://github.com/C23-PC675/catidentifier-model-API.git
+### How to use the endpoint that already been deployed
 
-2.  Create and activate the virtual environment
-
-    python -m venv venv
-
-    venv\Scripts\activate
-
-3.  Install the required libraries
-
-    pip install -r requirements.txt
-
-4.  Configure the .env
-
-    make a new .env file that base on the example
-
-5.  Run it
-
-    python app.py
+https://catidentifier-api-dkxmr2pyqa-et.a.run.app/cats (TO GET ALL CATS DATA)
+https://catidentifier-api-dkxmr2pyqa-et.a.run.app/upload (POST IMAGE FILE AND GET SELECTED CAT DATA)
